@@ -1,0 +1,46 @@
+{
+  "name": "xcode-skills",
+  "version": "1.0.0",
+  "description": "Apple-authored agent skills exported from the Xcode 27 developer beta: SwiftUI best practices, SDK 27 APIs, UIKit modernization, security hardening, C bounds safety, test modernization, and device interaction.",
+  "author": {
+    "name": "Apple Inc.",
+    "url": "https://developer.apple.com"
+  },
+  "homepage": "https://github.com/mariusfanu/xcode-skills",
+  "repository": "https://github.com/mariusfanu/xcode-skills",
+  "license": "MIT",
+  "keywords": [
+    "xcode",
+    "swift",
+    "swiftui",
+    "uikit",
+    "ios",
+    "macos",
+    "security",
+    "testing",
+    "apple",
+    "swift-testing"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Xcode Skills",
+    "shortDescription": "Apple platform agent skills for SwiftUI, UIKit, security, and testing",
+    "longDescription": "Unofficial export of Apple-authored agent skills from the Xcode 27 developer beta. Covers SwiftUI best practices and SDK 27 APIs, UIKit app modernization, Xcode security build settings, C bounds safety, Swift Testing migration, and device/simulator interaction workflows.",
+    "developerName": "Apple Inc.",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/mariusfanu/xcode-skills",
+    "privacyPolicyURL": "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement",
+    "termsOfServiceURL": "https://docs.github.com/en/site-policy/github-terms/github-terms-of-service",
+    "defaultPrompt": [
+      "Review my SwiftUI code for best practices.",
+      "Audit my Xcode project's security build settings."
+    ],
+    "brandColor": "#007AFF",
+    "screenshots": []
+  }
+}

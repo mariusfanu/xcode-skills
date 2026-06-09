@@ -1,0 +1,20 @@
+{
+  "name": "xcode-skills",
+  "interface": {
+    "displayName": "Xcode Skills"
+  },
+  "plugins": [
+    {
+      "name": "xcode-skills",
+      "source": {
+        "source": "local",
+        "path": "./plugins/xcode-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}
