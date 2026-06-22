@@ -1,7 +1,7 @@
 {
   "name": "xcode-skills",
-  "version": "1.0.0",
-  "description": "Apple-authored agent skills exported from the Xcode 27 developer beta: SwiftUI best practices, SDK 27 APIs, UIKit modernization, security hardening, C bounds safety, test modernization, and device interaction.",
+  "version": "1.1.0",
+  "description": "Apple-authored agent skills exported from the Xcode 27 developer beta: SwiftUI best practices, SDK 27 APIs, UIKit modernization, security hardening, C bounds safety, Swift Testing modernization, and device interaction.",
   "author": {
     "name": "Apple Inc.",
     "url": "https://developer.apple.com"
@@ -24,8 +24,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Xcode Skills",
-    "shortDescription": "Apple platform agent skills for SwiftUI, UIKit, security, and testing",
-    "longDescription": "Unofficial export of Apple-authored agent skills from the Xcode 27 developer beta. Covers SwiftUI best practices and SDK 27 APIs, UIKit app modernization, Xcode security build settings, C bounds safety, Swift Testing migration, and device/simulator interaction workflows.",
+    "shortDescription": "Apple platform agent skills for SwiftUI, UIKit, security, and Swift Testing",
+    "longDescription": "Unofficial export of Apple-authored agent skills from the Xcode 27 developer beta. Covers SwiftUI best practices and SDK 27 APIs, UIKit app modernization, Xcode security build settings, C bounds safety, Swift Testing modernization, and device/simulator interaction workflows.",
     "developerName": "Apple Inc.",
     "category": "Developer Tools",
     "capabilities": [

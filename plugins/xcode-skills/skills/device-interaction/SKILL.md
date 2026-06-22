@@ -1,6 +1,6 @@
 ---
-description: "Verify iOS app behavior on device or simulator via screenshots, UI hierarchy, and touch interactions."
 name: device-interaction
+description: "Verify iOS app behavior on device or simulator via screenshots, UI hierarchy, and touch interactions."
 ---
 # Device Interaction
 
@@ -11,13 +11,13 @@ DO NOT TRIGGER when: user asks about unit tests only, build-only requests withou
 
 # For the Main Agent
 
-**This is a SUBAGENT skill.** Invoke it via the Agent tool when device verification is needed.
+**This is a SUBAGENT skill.** Invoke it via the Agent tool when device verification is needed. If there is an open session for that work, provide that session identifier to a subagent for exclusive use by that subagent.
 
 ```
 Agent tool:
 - subagent_type: "general-purpose"
 - description: "Verify login feature works"
-- prompt: "Using the device-interaction skill, verify that the login feature works correctly on session <device-interaction-session>. Launch the app, capture screenshot and UI hierarchy, check that the login button is visible and tappable, and report if the implementation is working correctly."
+- prompt: "Using the device-interaction skill, verify that the login feature works correctly on session <session-identifier>. Launch the app, capture screenshot and UI hierarchy, check that the login button is visible and tappable, and report if the implementation is working correctly."
 ```
 
 **After implementing a UI-affecting feature, invoke this skill to verify the implementation works on a device.**

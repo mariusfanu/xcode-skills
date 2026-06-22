@@ -19,8 +19,10 @@ This repo only packages and distributes those exported files for easier installa
 | `uikit-app-modernization` | Modernize UIKit apps for multi-window environments (safe area, orientation, scene lifecycle) |
 | `audit-xcode-security-settings` | Audit and enable security-oriented Xcode build settings and Enhanced Security features |
 | `c-bounds-safety` | Guide for the C `-fbounds-safety` language extension and adoption |
-| `test-modernizer` | Migrate XCTest suites to Swift Testing and adopt modern testing features |
+| `modernize-tests` | Migrate XCTest suites to Swift Testing and adopt modern testing features |
 | `device-interaction` | Verify app behavior on device or simulator via screenshots, UI hierarchy, and touch |
+
+The plugin package name remains `xcode-skills` across Claude Code, Codex, Grok CLI, and compatible agents. The current Xcode export renamed the previous `test-modernizer` skill to `modernize-tests`.
 
 ## Installation
 

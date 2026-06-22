@@ -1,7 +1,7 @@
 {
   "name": "xcode-skills",
-  "version": "1.0.0",
-  "description": "Apple-authored agent skills exported from the Xcode 27 developer beta: SwiftUI, UIKit modernization, security auditing, C bounds safety, test modernization, and device interaction",
+  "version": "1.1.0",
+  "description": "Apple-authored agent skills exported from the Xcode 27 developer beta: SwiftUI, UIKit modernization, security auditing, C bounds safety, Swift Testing modernization, and device interaction",
   "author": {
     "name": "Apple Inc."
   },

@@ -1,8 +1,8 @@
 ---
+name: modernize-tests
 description: "Modernize test suites to use modern Swift Testing features or migrate from XCTest."
-name: test-modernizer
 ---
-# Test Modernizer
+# Modernize Tests
 
 Apply when: user asks to modernize, update, migrate, supercharge, or convert their tests.
 XCTest should be migrated to Swift Testing when possible, existing Swift Testing tests should be evaluated to see if they could be better structured adopting newer features.
