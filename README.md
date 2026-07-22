@@ -1,6 +1,6 @@
 # Xcode Skills
 
-An unofficial export of Apple agent skills from the **Xcode 27 developer beta**, repackaged as a cross-platform plugin marketplace for Claude Code, Codex, Grok CLI, and other compatible coding agents.
+An unofficial export of Apple agent skills from **Xcode 27 developer beta 4**, repackaged as a cross-platform plugin marketplace for Claude Code, Codex, Grok CLI, and other compatible coding agents.
 
 **These skills were not created by this repository.** They are Apple-authored agent skills bundled with the latest Xcode 27 dev beta, exported with:
 
@@ -18,11 +18,11 @@ This repo only packages and distributes those exported files for easier installa
 | `swiftui-whats-new-27` | New SwiftUI APIs and SDK 27 migrations (`@State` macro, reorderable, swipe actions, toolbars, and more) |
 | `uikit-app-modernization` | Modernize UIKit apps for multi-window environments (safe area, orientation, scene lifecycle) |
 | `audit-xcode-security-settings` | Audit and enable security-oriented Xcode build settings and Enhanced Security features |
-| `c-bounds-safety` | Guide for the C `-fbounds-safety` language extension and adoption |
+| `adopt-c-bounds-safety` | Guide for adopting the C `-fbounds-safety` language extension |
 | `modernize-tests` | Migrate XCTest suites to Swift Testing and adopt modern testing features |
 | `device-interaction` | Verify app behavior on device or simulator via screenshots, UI hierarchy, and touch |
 
-The plugin package name remains `xcode-skills` across Claude Code, Codex, Grok CLI, and compatible agents. The current Xcode export renamed the previous `test-modernizer` skill to `modernize-tests`.
+The plugin package name remains `xcode-skills` across Claude Code, Codex, Grok CLI, and compatible agents. Xcode 27 beta 2 renamed `test-modernizer` to `modernize-tests`; beta 4 renamed `c-bounds-safety` to `adopt-c-bounds-safety`.
 
 ## Installation
 
@@ -110,5 +110,5 @@ cp -R plugins/xcode-skills/skills/* .grok/skills/
 
 ## Attribution
 
-- **Skill content:** Apple Inc., exported from the Xcode 27 developer beta via `xcrun agent skills export`
+- **Skill content:** Apple Inc., exported from Xcode 27 developer beta 4 via `xcrun agent skills export`
 - **This repository:** packaging and marketplace manifests only

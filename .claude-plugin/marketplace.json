@@ -1,14 +1,14 @@
 {
   "name": "xcode-skills",
-  "description": "Unofficial export of Apple agent skills from the Xcode 27 developer beta for SwiftUI, UIKit, security auditing, testing, and device interaction",
+  "description": "Unofficial export of Apple agent skills from Xcode 27 developer beta 4 for SwiftUI, UIKit, security auditing, testing, and device interaction",
   "owner": {
     "name": "Apple Inc."
   },
   "plugins": [
     {
       "name": "xcode-skills",
-      "description": "Apple-authored agent skills exported from the Xcode 27 developer beta: SwiftUI best practices, SDK 27 APIs, UIKit modernization, security hardening, C bounds safety, Swift Testing modernization, and device interaction",
-      "version": "1.1.0",
+      "description": "Apple-authored agent skills exported from Xcode 27 developer beta 4: SwiftUI best practices, SDK 27 APIs, UIKit modernization, security hardening, C bounds safety adoption, Swift Testing modernization, and device interaction",
+      "version": "1.2.0",
       "source": "./plugins/xcode-skills",
       "author": {
         "name": "Apple Inc."

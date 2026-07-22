@@ -12,10 +12,61 @@ This guide walks through the process of adopting `-fbounds-safety` in an existin
 > > 2. I'll analyze your code and write a plan to perform the adoption.
 > > 3. Once you confirm the plan, I'll perform the adoption in multiple steps, stopping at relevant points to give you a chance to review the changes before I commit them.
 
-> **Before advising on adoption, ask the user whether they want full adoption or header-only adoption, then provide guidance for the chosen approach.**
 > **Always make a plan when applying this skill because changes are rarely trivial and the developer needs to understand the process**
 
+## Prerequisites
+
+### Code is under a version control system (VCS)
+
+Adoption commits at multiple checkpoints, so the project must be under a VCS this skill can drive and the working tree must be clean. Before asking the user any question or analyzing code, detect the VCS (without asking the user — if multiple, take the innermost relative to the project root) and run its status command.
+
+Once detected, record the VCS name and the concrete commands you will use for:
+
+- status
+- diff
+- staging by explicit path
+- commit
+- discarding a file's uncommitted working-tree changes
+
+Use those captured commands for every VCS operation in the rest of this skill — do not switch VCSes mid-run, and do not assume git unless git is what you detected.
+
+If no usable VCS is found, present the **No-VCS refusal** below and stop. If the working tree is not clean, present the **Dirty-tree refusal** below, including the status output, and stop. On user-reported remediation, re-run the checks before continuing.
+
+**No-VCS refusal:**
+
+> > `-fbounds-safety` adoption commits at multiple review checkpoints, so without version control I cannot checkpoint stages, revert a bad enablement, or keep your edits separate from mine at review stops.
+> >
+> > Please initialize a repository (or move to a directory already under version control) and tell me when to retry.
+
+**Dirty-tree refusal:**
+
+> > The working tree has uncommitted changes. Adoption commits at multiple review checkpoints, and pre-existing changes would get bundled into those commits and tangle prior work with adoption edits.
+> >
+> > Please commit, set aside, or discard the existing changes, then tell me when to retry. The current status output is below.
+
+### Build system source of truth (when running under Xcode)
+
+If you have been told you are running under Xcode, use the project's `.xcworkspace` (preferred) or `.xcodeproj` as the single source of truth for all build-related queries and operations — ignore every other build-system or project-generator artifact regardless of kind (e.g., `Makefile`). Search the VCS-tracked tree (rooted at the VCS root detected above) and take the shallowest match; if more than one candidate exists at the same depth, ask the user which to use. When a `.xcworkspace` is present, treat it as the entry point and resolve the relevant `.xcodeproj` from its `contents.xcworkspacedata` — if the workspace references multiple projects, ask the user which one to adopt. Do not switch build systems mid-run.
+
+Once resolved, record the workspace path (if any), the `.xcodeproj` path, the `xcodebuild` invocation form (workspace+scheme or project+target), and the per-file `-fbounds-safety` attachment mechanism — reuse these throughout the rest of the skill rather than re-deriving them.
+
+For build-system queries and operations against the resolved project, prefer the Xcode MCP tools; fall back to other methods (e.g., reading `project.pbxproj`, running `xcodebuild`) only when those tools are insufficient.
+
+If the resolved `.xcodeproj` is produced by a generator script (e.g., a top-level `generate_xcodeproj.py`, xcodegen, Tuist), warn the user up front that per-file `-fbounds-safety` flags this skill writes into the `.xcodeproj` will be silently clobbered on the next regeneration — they must either stop regenerating or migrate the flag wiring into the generator's input.
+
+If no `.xcworkspace` or `.xcodeproj` exists anywhere in the VCS-tracked tree, present the **No-Xcode-project refusal** below and stop.
+
+**No-Xcode-project refusal:**
+
+> > I'm running under Xcode but can't find a `.xcworkspace` or `.xcodeproj` in this project. Please tell me which build system to treat as source of truth.
+
+If the user names SwiftPM (`Package.swift`) as the source of truth, decline: SwiftPM does not expose per-file C build flags, which `-fbounds-safety` adoption requires. Ask them to name a different build system.
+
+If the user names any other build system (e.g., `Makefile`), confirm it supports per-file C flag attachment and record the concrete mechanism (e.g., per-file `CFLAGS`) for use in place of Xcode-specific flag wiring throughout the rest of this skill. If it does not support per-file C flag attachment, decline as with SwiftPM and ask them to name a different build system.
+
 ## Choosing an Adoption Approach
+
+> **Before advising on adoption, ask the user whether they want full adoption or header-only adoption, then provide guidance for the chosen approach.**
 
 There are two approaches to adopting `-fbounds-safety`:
 
@@ -120,13 +171,13 @@ If any file is later skipped via §3 [Skipping a file's enablement](#skipping-a-
 
 Every commit during adoption is preceded by a stop-and-review step. During that stop the user is explicitly invited to inspect and modify the changes. **Their edits must end up in a commit — they must not be silently left in the working tree or dropped.** Follow this procedure at every commit point in this guide:
 
-1. Before staging anything, run `git status` and `git diff` to enumerate **all** working-tree changes. This includes both Claude's edits and any further edits the user made while the stop was open. Do not assume the working tree contains only what Claude wrote.
+1. Before staging anything, list **all** working-tree changes and inspect their diff using the captured VCS commands (e.g. `git status` + `git diff HEAD`) to enumerate them. This includes both Claude's edits and any further edits the user made while the stop was open. Do not assume the working tree contains only what Claude wrote.
 2. Classify each modified or new file as **source-code** (`.c`, `.h`, validation files) or **build-system** (Xcode `project.pbxproj`, CMakeLists, Makefiles, any per-file flag entry).
 3. Check the result against the commit's declared scope (stated at each commit site below — e.g. "source-code only", "build-system only", or "headers + validation file"):
-    - If every changed file fits the scope, stage exactly those files (Claude's + user's) and commit.
+    - If every changed file fits the scope, stage exactly those files (Claude's + user's) by explicit path and commit using the captured VCS commands.
     - If the user's edits span kinds that don't all fit the scope — for example, source-code edits appearing during a build-system-only commit — **stop and ask the user** how to split them: which go into the current commit, which should be deferred to the next one, and which (if any) should be dropped. Apply their answer, then commit.
-4. Never `git add -A` or `git add .` blindly — always stage by explicit filename after classification, so unrelated working-tree changes (e.g. unrelated `.DS_Store`, scratch files) are not pulled in.
-5. Do not propose `git commit --amend` to fold user edits into a previously-made commit unless the user explicitly asks for it.
+4. Always specify explicit paths when staging or committing — never let unrelated working-tree changes (e.g. `.DS_Store`, scratch files) get picked up. On git, this rules out `git add -A`, `git add .`, `git commit -a`, and any flag or shorthand that auto-includes modified files.
+5. Do not propose folding user edits into a previously-made commit (e.g. `git commit --amend`) unless the user explicitly asks for it.
 
 This procedure is referenced from §2, §3 step 5a, §3 step 5b, and §5.x's verify-stop-and-commit body below.
 
@@ -144,6 +195,8 @@ Once the target is known if it contains more than one `.c` source file we need t
 - The same as above can be done for private headers
 
 If the user already knows a particular `.c` file is unadoptable in this pass (e.g. a known compiler crash, or they want to defer it), invoke the §3 [Skipping a file's enablement](#skipping-a-files-enablement) procedure the moment the user declares the skip.
+
+> Reminder: when running under Xcode the `.xcodeproj` is the source of truth for all build-system queries and operations — see [Build system source of truth](#build-system-source-of-truth-when-running-under-xcode).
 
 #### 1. Headers First
 
@@ -335,7 +388,7 @@ Wait for the user's explicit answer.
 - `TaskUpdate` the §4 task to `completed` with a one-line note `skipped: file(s) <X, Y, …> not adopted; per-file flags retained for adopted files`. If the §4 task was already marked complete-with-note by a previous skip, append the new file to the running list (re-edit the note via `TaskUpdate`).
 - No dependency rewiring is needed: §5.x umbrellas are already `addBlockedBy [<step 4 task ID>]`, so marking §4 complete naturally unblocks them once the remaining per-file tasks finish.
 
-**3. Handle any in-progress adoption state on the skipped file (mid-stream only).** If the per-file `-fbounds-safety` flag was already toggled on for this file, or source changes toward adoption were already started, stop and ask the user how to handle the uncommitted working-tree changes for this file. The default recommendation is to revert them — otherwise the file is left in a half-broken state (e.g. flag on but adoption incomplete). Apply the user's answer before moving on.
+**3. Handle any in-progress adoption state on the skipped file (mid-stream only).** If the per-file `-fbounds-safety` flag was already toggled on for this file, or source changes toward adoption were already started, stop and ask the user how to handle the uncommitted working-tree changes for this file. The default recommendation is to discard them (e.g. `git restore <file>`) — otherwise the file is left in a half-broken state (e.g. flag on but adoption incomplete). Apply the user's answer before moving on.
 
 Then continue with the next per-file task if mid-stream.
 
