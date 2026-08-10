@@ -4,12 +4,11 @@ description: "Modernize test suites to use modern Swift Testing features or migr
 ---
 # Modernize Tests
 
-Apply when: user asks to modernize, update, migrate, supercharge, or convert their tests.
-XCTest should be migrated to Swift Testing when possible, existing Swift Testing tests should be evaluated to see if they could be better structured adopting newer features.
+Test modernization refers to two potential actions: migrating from XCTest to Swift Testing, and updating existing Swift Testing tests to use recommended patterns.
 
-Do not apply when: user asks to write new tests from scratch (without existing XCTest code), user asks about XCTest features only, user only asks about
-test results or test running, user is asking to update tests to cover new functionality rather than updating the tests themselves,
-user is debugging test failures without mentioning migration, user has UI automation tests using XCUI* APIs (these cannot be migrated to Swift Testing).
+XCTests should be migrated to Swift Testing when possible. However, not all XCTests can be migrated to Swift Testing.
+- UI tests (those that use XCUIAutomation) cannot be written with Swift Testing, and must remain XCTests.
+- XCTests that use the `measure { ... }` family of APIs for performance measurement cannot be migrated. However, other test methods within an XCTestCase that do not use XCTest performance APIs can be migrated.
 
 ## Migration Reference
 
@@ -17,16 +16,15 @@ user is debugging test failures without mentioning migration, user has UI automa
 
 Replace `import XCTest` with `import Testing`. A file can import both if it contains mixed test content during incremental migration.
 
-When removing import XCTest, check whether the file uses Foundation types (URL, CharacterSet, ProcessInfo, Data, etc.). XCTest re-exports
-Foundation, so add `import Foundation` if needed.
+When removing `import XCTest`, check whether the file uses Foundation types (URL, CharacterSet, ProcessInfo, Data, etc.). XCTest re-exports Foundation, so add `import Foundation` if needed.
 
 ### Test Classes to Suites
 
-Remove `XCTestCase` inheritance. Prefer `struct` over `class`:
+Remove `XCTestCase` inheritance. Prefer structs over classes:
 
 - `final class FoodTruckTests: XCTestCase { ... }` -> `struct FoodTruckTests { ... }`
 
-### setUp/tearDown to init/deinit
+### Move setUp/tearDown code to init/deinit
 
 Replace `override func setUp()` with `init()` (can be `async throws`). Replace `override func tearDown()` with `deinit`. If `deinit` is needed, use
 `actor` or `final class` instead of `struct` (since structs have no `deinit`). Change stored properties to not use implicitly-unwrapped optional
@@ -234,7 +232,6 @@ Replace `XCTAttachment` + `self.add(attachment)` with `Attachment.record(value)`
 - Prefer `struct` for suites unless `deinit` (tearDown) is needed, in which case use `actor` or `final class`.
 - Remove the `test` prefix from method names when adding `@Test`. For lengthier test names which read like a sentence, use raw identifier syntax to
 improve readability, e.g. `@Test func `Authenticate, fetch summary, then check count`() { ... }`.
-- Also check existing `@Test` functions for multi-word camelCase names and convert those to sentence-case raw identifiers.
 - Use raw identifier syntax only for multi-word names that read like a sentence.
 - When migrating `setUp`, convert implicitly-unwrapped optional properties to non-optional properties initialized in-place, or in `init` if initialization is complex, may throw, or is async.
 - Look for explicit `XCTFail`/`Issue.record` calls that could be converted to `#expect` or `#require`
@@ -242,5 +239,7 @@ improve readability, e.g. `@Test func `Authenticate, fetch summary, then check c
 - Add `@MainActor` only to tests that explicitly relied on XCTest's implicit main-actor isolation. Do not add it unnecessarily.
 - Look for tests that loop over inputs or many repeated tests with the same logic and convert them to parameterized tests using `@Test(arguments:)`.
 - For suites with shared mutable state between tests, add `@Suite(.serialized)` and consider using `actor` or `class` instead of `struct`.
-- Do not use underscore-prefixed symbols such as `#_sourceLocation`; only use public API. For source locations, always use
-  the full `SourceLocation(fileID:filePath:line:column:)` initializer.
+- Do not introduce usage of underscore-prefixed symbols such as `#_sourceLocation`; only use public API.
+  For source locations, always use the full `SourceLocation(fileID:filePath:line:column:)` initializer.
+- If the test suite already uses #_sourceLocation, do not replace the existing usage as part of modernization.
+- Split this work over multiple agents if necessary if the modernization task is complex

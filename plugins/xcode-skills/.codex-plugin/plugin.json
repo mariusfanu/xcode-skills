@@ -1,7 +1,7 @@
 {
   "name": "xcode-skills",
-  "version": "1.2.0",
-  "description": "Apple-authored agent skills exported from Xcode 27 developer beta 4: SwiftUI best practices, SDK 27 APIs, UIKit modernization, security hardening, C bounds safety adoption, Swift Testing modernization, and device interaction.",
+  "version": "1.3.0",
+  "description": "Apple-authored agent skills exported from Xcode 27 developer beta 5: SwiftUI best practices, SDK 27 APIs, App Intents, document-based apps, UIKit modernization, security hardening, C bounds safety adoption, Swift Testing modernization, and device interaction.",
   "author": {
     "name": "Apple Inc.",
     "url": "https://developer.apple.com"
@@ -14,6 +14,7 @@
     "swift",
     "swiftui",
     "uikit",
+    "app-intents",
     "ios",
     "macos",
     "security",
@@ -24,8 +25,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Xcode Skills",
-    "shortDescription": "Apple platform agent skills for SwiftUI, UIKit, security, and Swift Testing",
-    "longDescription": "Unofficial export of Apple-authored agent skills from Xcode 27 developer beta 4. Covers SwiftUI best practices and SDK 27 APIs, UIKit app modernization, Xcode security build settings, C bounds safety adoption, Swift Testing modernization, and device/simulator interaction workflows.",
+    "shortDescription": "Apple platform agent skills for SwiftUI, App Intents, UIKit, security, and Swift Testing",
+    "longDescription": "Unofficial export of Apple-authored agent skills from Xcode 27 developer beta 5. Covers SwiftUI best practices and SDK 27 APIs, App Intents best practices and SDK 26/27 APIs, document-based SwiftUI apps, UIKit app modernization, Xcode security build settings, C bounds safety adoption, Swift Testing modernization, and device/simulator interaction workflows.",
     "developerName": "Apple Inc.",
     "category": "Developer Tools",
     "capabilities": [
@@ -38,7 +39,8 @@
     "termsOfServiceURL": "https://docs.github.com/en/site-policy/github-terms/github-terms-of-service",
     "defaultPrompt": [
       "Review my SwiftUI code for best practices.",
-      "Audit my Xcode project's security build settings."
+      "Audit my Xcode project's security build settings.",
+      "Review my App Intents for best practices."
     ],
     "brandColor": "#007AFF",
     "screenshots": []
