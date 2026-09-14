@@ -1,8 +1,8 @@
 # Xcode Skills
 
-An unofficial export of Apple agent skills from **Xcode 27 RC**, repackaged as a cross-platform plugin marketplace for Claude Code, Codex, Grok CLI, and other compatible coding agents.
+An unofficial export of Apple agent skills from **Xcode 27**, repackaged as a cross-platform plugin marketplace for Claude Code, Codex, Grok CLI, and other compatible coding agents.
 
-**These skills were not created by this repository.** They are Apple-authored agent skills bundled with Xcode 27 RC, exported with:
+**These skills were not created by this repository.** They are Apple-authored agent skills bundled with Xcode 27, exported with:
 
 ```bash
 xcrun agent skills export
@@ -25,7 +25,7 @@ This repo only packages and distributes those exported files for easier installa
 | `modernize-tests` | Migrate XCTest suites to Swift Testing and adopt modern testing features |
 | `device-interaction` | Verify app behavior on device or simulator via screenshots, UI hierarchy, touch, and tvOS Siri Remote focus |
 
-The plugin package name remains `xcode-skills` across Claude Code, Codex, Grok CLI, and compatible agents. Xcode 27 beta 2 renamed `test-modernizer` to `modernize-tests`; beta 4 renamed `c-bounds-safety` to `adopt-c-bounds-safety`; beta 5 adds App Intents skills and splits document-based SwiftUI guidance into `building-document-based-swiftui-applications`; beta 6 adds tvOS Siri Remote focus commands to `device-interaction`; RC adds checked pointer arithmetic (`arm64e.x1`) to `audit-xcode-security-settings`.
+The plugin package name remains `xcode-skills` across Claude Code, Codex, Grok CLI, and compatible agents. Xcode 27 beta 2 renamed `test-modernizer` to `modernize-tests`; beta 4 renamed `c-bounds-safety` to `adopt-c-bounds-safety`; beta 5 adds App Intents skills and splits document-based SwiftUI guidance into `building-document-based-swiftui-applications`; beta 6 adds tvOS Siri Remote focus commands to `device-interaction`; Xcode 27 adds checked pointer arithmetic (`arm64e.x1`) to `audit-xcode-security-settings`.
 
 ## Installation
 
@@ -113,5 +113,5 @@ cp -R plugins/xcode-skills/skills/* .grok/skills/
 
 ## Attribution
 
-- **Skill content:** Apple Inc., exported from Xcode 27 RC via `xcrun agent skills export`
+- **Skill content:** Apple Inc., exported from Xcode 27 via `xcrun agent skills export`
 - **This repository:** packaging and marketplace manifests only
