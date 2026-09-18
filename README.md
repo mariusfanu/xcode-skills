@@ -1,8 +1,8 @@
 # Xcode Skills
 
-An unofficial export of Apple agent skills from **Xcode 27**, repackaged as a cross-platform plugin marketplace for Claude Code, Codex, Grok CLI, and other compatible coding agents.
+An unofficial export of Apple agent skills from **Xcode 27.1 beta 1**, repackaged as a cross-platform plugin marketplace for Claude Code, Codex, Grok CLI, and other compatible coding agents.
 
-**These skills were not created by this repository.** They are Apple-authored agent skills bundled with Xcode 27, exported with:
+**These skills were not created by this repository.** They are Apple-authored agent skills bundled with Xcode 27.1 beta 1, exported with:
 
 ```bash
 xcrun agent skills export
@@ -19,13 +19,13 @@ This repo only packages and distributes those exported files for easier installa
 | `building-document-based-swiftui-applications` | Build and migrate document-based SwiftUI apps with the `Document` protocol (`DocumentGroup`, readers/writers, UTTypes) |
 | `app-intents-specialist` | App Intents best practices: entities, queries, parameters, donations, shortcuts phrases, and localization |
 | `app-intents-whats-new-27` | New App Intents APIs for iOS 26/27 (execution modes, snippets, Visual Intelligence, Spotlight, testing) |
-| `uikit-app-modernization` | Modernize UIKit apps for multi-window environments (safe area, orientation, scene lifecycle) |
+| `app-resizability` | Make UIKit apps adapt to resizable windows, split-screen, Stage Manager, and the foldable iPhone Duo |
 | `audit-xcode-security-settings` | Audit and enable security-oriented Xcode build settings, Enhanced Security, and checked pointer arithmetic |
 | `adopt-c-bounds-safety` | Guide for adopting the C `-fbounds-safety` language extension |
 | `modernize-tests` | Migrate XCTest suites to Swift Testing and adopt modern testing features |
 | `device-interaction` | Verify app behavior on device or simulator via screenshots, UI hierarchy, touch, and tvOS Siri Remote focus |
 
-The plugin package name remains `xcode-skills` across Claude Code, Codex, Grok CLI, and compatible agents. Xcode 27 beta 2 renamed `test-modernizer` to `modernize-tests`; beta 4 renamed `c-bounds-safety` to `adopt-c-bounds-safety`; beta 5 adds App Intents skills and splits document-based SwiftUI guidance into `building-document-based-swiftui-applications`; beta 6 adds tvOS Siri Remote focus commands to `device-interaction`; Xcode 27 adds checked pointer arithmetic (`arm64e.x1`) to `audit-xcode-security-settings`.
+The plugin package name remains `xcode-skills` across Claude Code, Codex, Grok CLI, and compatible agents. Xcode 27 beta 2 renamed `test-modernizer` to `modernize-tests`; beta 4 renamed `c-bounds-safety` to `adopt-c-bounds-safety`; beta 5 adds App Intents skills and splits document-based SwiftUI guidance into `building-document-based-swiftui-applications`; beta 6 adds tvOS Siri Remote focus commands to `device-interaction`; Xcode 27 adds checked pointer arithmetic (`arm64e.x1`) to `audit-xcode-security-settings`; Xcode 27.1 beta 1 replaces `uikit-app-modernization` with `app-resizability` (resizable windows, iPhone Duo, `userInterfaceIdiom`).
 
 ## Installation
 
@@ -113,5 +113,5 @@ cp -R plugins/xcode-skills/skills/* .grok/skills/
 
 ## Attribution
 
-- **Skill content:** Apple Inc., exported from Xcode 27 via `xcrun agent skills export`
+- **Skill content:** Apple Inc., exported from Xcode 27.1 beta 1 via `xcrun agent skills export`
 - **This repository:** packaging and marketplace manifests only

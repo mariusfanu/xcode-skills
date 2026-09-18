@@ -19,7 +19,7 @@
 - **Nil-screen fallbacks** — `screen == nil ? [UIScreen mainScreen] : screen`, `self.window.screen ?: [UIScreen mainScreen]`, `screen ?? UIScreen.main`. The `[UIScreen mainScreen]` fallback IS a target site, even when wrapped in a nil check. See the [Fallback Paths](#fallback-paths) section below for the full handling.
 - **Private helpers whose only `UIScreen` use is "incidental"** — e.g., a `-(CGFloat)pixelWidth` helper that internally reads `[UIScreen mainScreen].scale`. The helper is the deprecation target, even if the caller looks unrelated to display rendering.
 - **Cached `dispatch_once` / static-let / lazy-var helpers** that read `UIScreen.main` once at first call and freeze the value (e.g., `mainScreenScale()`, `isLargeDevice()`, `isRetina()`). The helper itself is the target.
-- **`UIScreen.main` passed as an argument to another function** — e.g., `MapsIdiomIsMac(UIScreen.mainScreen)`, `UIRoundToScreenScale(value, UIScreen.mainScreen.scale)`. The argument is the target site; modernize it via the helper's own `traitCollection`/parameter migration if available, or via deprecate-and-forward on the helper. **However, only edit such an argument when the user explicitly asks for it — otherwise leave it for its own task per the off-target replacement guard ([Core Principle 16 in SKILL.md](../SKILL.md#core-principles)).**
+- **`UIScreen.main` passed as an argument to another function** — e.g., `MapsIdiomIsMac(UIScreen.mainScreen)`, `UIRoundToScreenScale(value, UIScreen.mainScreen.scale)`. The argument is the target site; modernize it via the helper's own `traitCollection`/parameter migration if available, or via deprecate-and-forward on the helper. **However, only edit such an argument when the user explicitly asks for it — otherwise leave it for its own task per the off-target replacement guard ([Core Principle 14 in SKILL.md](../SKILL.md#core-principles)).**
 - **Hardware/screen assumptions where a TODO is the right output** — when there's no safe replacement (e.g., `UIScreen.main.nativeScale` with no trait-collection equivalent in a context where the call site can't yet receive a window), a TODO explaining the assumption IS the right output. Producing no diff is wrong — produce the TODO.
 
 If a target appears outside this list (e.g., a safe-area-inset bug, a coordinate-space conversion site, a private method rename), follow the active task's reference file. The skill must NOT skip files because "this isn't a `.scale` substitution" — the trigger is the deprecated API appearing in a site, not the specific shape of the expression.
@@ -101,6 +101,8 @@ Part B is NOT needed when the value is consumed fresh every time — in `layoutS
 ### Deprecate-and-forward pattern (non-view classes)
 
 Three required pieces: (1) deprecation, (2) new overload, (3) forwarding. Same structure regardless of access level (`private`, `internal`, `public`).
+
+**Never remove the old declaration.** It must remain in the file as the deprecated wrapper that forwards to the new version. Changing the old signature in place instead of adding a second one is not this pattern: it drops the migration bridge and breaks callers that are not in this diff. This applies to **ObjC functions and methods** exactly as it does to Swift methods, Swift initializers, computed properties, and protocol extensions. If you find yourself editing the original signature rather than adding a new one alongside it, stop and add the new one.
 
 **This pattern applies to ALL of the following — not just instance methods:**
 - Instance methods on non-view classes
@@ -321,7 +323,18 @@ Do **NOT** use `?? 0` or `?? .zero` as fallback for window bounds. Refactor the 
 | UIViewController in safe lifecycle methods | `self.view.bounds` |
 | UIView in safe lifecycle methods | `self.superview.bounds` |
 | UIView/UIViewController in unsafe methods | Move code to `viewIsAppearing` for view controllers and `layoutSubviews` for views or later |
+| `UIWindowScene` in scope with no window yet, as in a `UIWindowSceneDelegate` method | `windowScene.effectiveGeometry.coordinateSpace.bounds` (iOS 26+) |
 | Non-view class / static / free function | Add `bounds: CGRect` parameter, deprecate original |
+
+> **The scene row is the last resort, not a shortcut.** Prefer the view when the question is about the view's own space. Prefer the window over the scene when a window exists (Core Principle 1). Reach for the scene only where neither is available yet, such as `scene(_:willConnectTo:options:)`.
+
+> **Limits on the scene row.** Below a deployment target of iOS 26, read `windowScene.coordinateSpace.bounds`, which exists from iOS 13 and reports the same value. A delegate method's signature is fixed by the protocol, so it cannot take an injected `bounds` parameter. And these bounds are the whole scene, insets included, so they answer no safe area question. Refer to [safe-area-task.md](safe-area-task.md) for insets.
+
+| Question | Scene geometry | View or superview bounds |
+|---|---|---|
+| Scope | The whole scene, at window-manager level | One view's own rectangle |
+| What the rectangle covers | Everything the scene occupies, bars included | Everything that view occupies, bars included. Neither subtracts the safe area; `safeAreaLayoutGuide` and `safeAreaInsets` do that |
+| Expensive work during a resize | `effectiveGeometry.isInteractivelyResizing` defers it until the drag ends | Reflow every frame, which is what a layout pass is for |
 
 > **`CGRectZero` is ONLY for `loadView`/`init`.** Substituting `CGRectZero` for `[UIScreen mainScreen].bounds` in any other context (instance methods past `viewDidLoad`, layout helpers, sizing computations) produces a zero-sized layout that breaks the feature. If the call site is in a safe lifecycle method, use `self.view.bounds` (view controller) or `self.superview.bounds` (view). If `view` may be nil, move the code or ask the user — but never substitute `CGRectZero` outside `loadView`/`init`.
 
@@ -387,6 +400,36 @@ This is the correct approach because:
 ---
 
 ## Special Cases
+
+### Catalyst Window Frame Persistence
+
+`systemFrame` exists on Mac Catalyst and nowhere else. A reference to it in an iOS build does not compile, so every use of it belongs behind `#if targetEnvironment(macCatalyst)`.
+
+A window's position on a Mac desktop lives in system coordinates, and no view can report it. `view.frame`, `view.bounds`, and `window.frame` are all in scene coordinates, so none of them can save or restore where the user put the window. `UIScreen.main.bounds` describes the display, not the window, so it is wrong for this too.
+
+Save `windowScene.effectiveGeometry.systemFrame`, and restore it with `requestGeometryUpdate(.Mac(systemFrame:))`.
+
+```swift
+#if targetEnvironment(macCatalyst)
+@MainActor
+enum WindowFrameStore {
+    private static var storedFrame: CGRect?
+
+    static func saveWindowFrame(for windowScene: UIWindowScene) {
+        storedFrame = windowScene.effectiveGeometry.systemFrame
+    }
+
+    static func restoreWindowFrame(for windowScene: UIWindowScene) {
+        guard let storedFrame, !storedFrame.isEmpty else { return }
+        windowScene.requestGeometryUpdate(.Mac(systemFrame: storedFrame))
+    }
+}
+#endif
+```
+
+Keep `@MainActor` on the store. `effectiveGeometry` and `requestGeometryUpdate` are both main actor isolated. A `static var` with no actor is also a compile error in the Swift 6 language mode.
+
+Guard the restore on a non-empty frame. A frame saved before the scene finished connecting can be zero, and restoring from it asks for a zero-sized window.
 
 ### Free Functions and Cached Helpers
 

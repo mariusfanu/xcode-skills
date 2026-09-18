@@ -1,6 +1,6 @@
 ---
-description: "Verify app behavior on device or simulator via screenshots, UI hierarchy, and touch interactions."
 name: device-interaction
+description: "Verify app behavior on device or simulator via screenshots, UI hierarchy, and touch interactions."
 ---
 # Device Interaction
 
