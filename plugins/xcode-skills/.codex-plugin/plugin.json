@@ -1,7 +1,7 @@
 {
   "name": "xcode-skills",
-  "version": "1.7.0",
-  "description": "Apple-authored agent skills exported from Xcode 27.1 beta 1: SwiftUI best practices, SDK 27 APIs, App Intents, document-based apps, app resizability, security hardening, C bounds safety adoption, Swift Testing modernization, and device interaction.",
+  "version": "1.8.0",
+  "description": "Apple-authored agent skills exported from Xcode 27.2 beta 3: SwiftUI best practices, SDK 27 APIs, App Intents, document-based apps, app resizability, security hardening, C bounds safety adoption, Swift Testing modernization, device interaction, and Instruments tracing with xctrace.",
   "author": {
     "name": "Apple Inc.",
     "url": "https://developer.apple.com"
@@ -26,7 +26,7 @@
   "interface": {
     "displayName": "Xcode Skills",
     "shortDescription": "Apple platform agent skills for SwiftUI, App Intents, UIKit, security, and Swift Testing",
-    "longDescription": "Unofficial export of Apple-authored agent skills from Xcode 27.1 beta 1. Covers SwiftUI best practices and SDK 27 APIs, App Intents best practices and SDK 26/27 APIs, document-based SwiftUI apps, app resizability (including foldable iPhone Duo), Xcode security build settings, C bounds safety adoption, Swift Testing modernization, and device/simulator interaction workflows.",
+    "longDescription": "Unofficial export of Apple-authored agent skills from Xcode 27.2 beta 3. Covers SwiftUI best practices and SDK 27 APIs, App Intents best practices and SDK 26/27 APIs, document-based SwiftUI apps, app resizability (including foldable iPhone Duo), Xcode security build settings, C bounds safety adoption, Swift Testing modernization, device/simulator interaction workflows, and command-line Instruments tracing with xctrace.",
     "developerName": "Apple Inc.",
     "category": "Developer Tools",
     "capabilities": [
