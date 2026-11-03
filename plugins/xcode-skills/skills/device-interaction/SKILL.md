@@ -1,6 +1,6 @@
 ---
 name: device-interaction
-description: "Verify app behavior on device or simulator via screenshots, UI hierarchy, and touch interactions."
+description: "Verify app behavior on a device via screenshots, UI hierarchy, and touch interactions."
 ---
 # Device Interaction
 
@@ -124,6 +124,7 @@ The `interactionCommand` parameter accepts a command syntax:
 | `sender keyboard kbd <text>` | Type text; **must be the last command in the chain** — all content after `kbd ` is taken verbatim (multiple spaces preserved). For special characters use `\u{XXXX}` Unicode escapes: `\u{000A}` (return/newline), `\u{0009}` (tab) |
 | `w duration` | Wait for a duration without any work |
 | `orientation faceDown/faceUp/landscapeLeft/landscapeRight/portrait/portraitUpsideDown` | Set device orientation (iOS only) |
+| `hinge <degrees>` | **Foldable devices only.** Set hinge angle in degrees (0 = closed, 180 = fully open) |
 | `c <rotations>` | **watchOS only.** Rotate the Digital Crown; sign sets direction, 1.0 = one full revolution |
 | `r up/down/left/right/select/menu/playpause/home` | **tvOS only.** Press a Siri Remote button to move focus, select, or go to the Home screen |
 
@@ -142,6 +143,7 @@ The `interactionCommand` parameter accepts a command syntax:
 - `"b c"` - watchOS: press the Digital Crown
 - `"b s"` - watchOS: press the side button
 - `"b a"` - watchOS: press the Action button (some devices only)
+- `"hinge 90"` - Set the hinge to 90 degrees
 - `"sender keyboard kbd hello world"` - Type text with spaces
 - `"sender keyboard kbd hello   world"` - Type text preserving multiple spaces
 - `"sender keyboard kbd submit\u{000A}"` - Type text then press Return/submit

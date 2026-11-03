@@ -1,7 +1,7 @@
 {
   "name": "xcode-skills",
-  "version": "1.8.2",
-  "description": "Apple-authored agent skills exported from Xcode 27.2: SwiftUI, App Intents, document-based apps, app resizability, security auditing, C bounds safety adoption, Swift Testing modernization, device interaction, and Instruments tracing with xctrace",
+  "version": "1.9.0",
+  "description": "Apple-authored agent skills exported from Xcode 27.3 beta 1: SwiftUI, App Intents, document-based apps, app resizability, security auditing, C bounds safety adoption, Swift Testing modernization, device interaction, Instruments tracing with xctrace, macOS touch gestures, and Siri app integration and evaluations",
   "author": {
     "name": "Apple Inc."
   },

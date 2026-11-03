@@ -1,8 +1,8 @@
 # Xcode Skills
 
-An unofficial export of Apple agent skills from **Xcode 27.2 (27B52)**, repackaged as a cross-platform plugin marketplace for Claude Code, Codex, Grok CLI, and other compatible coding agents.
+An unofficial export of Apple agent skills from **Xcode 27.3 beta 1 (27C5020n)**, repackaged as a cross-platform plugin marketplace for Claude Code, Codex, Grok CLI, and other compatible coding agents.
 
-**These skills were not created by this repository.** They are Apple-authored agent skills bundled with Xcode 27.2 (27B52), exported with:
+**These skills were not created by this repository.** They are Apple-authored agent skills bundled with Xcode 27.3 beta 1 (27C5020n), exported with:
 
 ```bash
 xcrun agent skills export
@@ -22,11 +22,14 @@ This repo only packages and distributes those exported files for easier installa
 | `app-resizability` | Make UIKit apps adapt to resizable windows, split-screen, Stage Manager, and the foldable iPhone Duo |
 | `audit-xcode-security-settings` | Audit and enable security-oriented Xcode build settings, Enhanced Security, and checked pointer arithmetic |
 | `adopt-c-bounds-safety` | Guide for adopting the C `-fbounds-safety` language extension |
-| `modernize-tests` | Migrate XCTest suites to Swift Testing and adopt modern testing features |
-| `device-interaction` | Verify app behavior on device or simulator via screenshots, UI hierarchy, touch, and tvOS Siri Remote focus |
+| `modernize-tests` | Migrate XCTest and XCUIAutomation suites to Swift Testing and adopt modern testing patterns |
+| `device-interaction` | Verify app behavior on device or simulator via screenshots, UI hierarchy, touch, tvOS Siri Remote focus, and foldable hinge angle |
 | `xctrace` | Capture and read Instruments traces (`.trace`, `.atrc`) and triage app hangs with `xctrace triage` |
+| `macos-touch-gestures` | Add direct touch support (e.g. iPad via Sidecar) to macOS apps with gesture recognizers across AppKit, SwiftUI, and Mac Catalyst |
+| `siri-app-integration` | Make an app work with Siri's model: `@AppIntent(.tool)`, `@AppEntity(.generable)`, Skills bundles, and the Siri Metadata Analyzer |
+| `siri-evaluations` | Write, run, and analyze SiriEvaluations scenarios that grade how Siri uses an app's App Intents |
 
-The plugin package name remains `xcode-skills` across Claude Code, Codex, Grok CLI, and compatible agents. Xcode 27 beta 2 renamed `test-modernizer` to `modernize-tests`; beta 4 renamed `c-bounds-safety` to `adopt-c-bounds-safety`; beta 5 adds App Intents skills and splits document-based SwiftUI guidance into `building-document-based-swiftui-applications`; beta 6 adds tvOS Siri Remote focus commands to `device-interaction`; Xcode 27 adds checked pointer arithmetic (`arm64e.x1`) to `audit-xcode-security-settings`; Xcode 27.1 beta 1 replaces `uikit-app-modernization` with `app-resizability` (resizable windows, iPhone Duo, `userInterfaceIdiom`); Xcode 27.2 beta 3 adds `xctrace` for Instruments traces and hang triage, and records that lazy `@State` initialization requires a private getter; Xcode 27.2 RC and final (27B52) skill guidance is unchanged from beta 3.
+The plugin package name remains `xcode-skills` across Claude Code, Codex, Grok CLI, and compatible agents. Xcode 27 beta 2 renamed `test-modernizer` to `modernize-tests`; beta 4 renamed `c-bounds-safety` to `adopt-c-bounds-safety`; beta 5 adds App Intents skills and splits document-based SwiftUI guidance into `building-document-based-swiftui-applications`; beta 6 adds tvOS Siri Remote focus commands to `device-interaction`; Xcode 27 adds checked pointer arithmetic (`arm64e.x1`) to `audit-xcode-security-settings`; Xcode 27.1 beta 1 replaces `uikit-app-modernization` with `app-resizability` (resizable windows, iPhone Duo, `userInterfaceIdiom`); Xcode 27.2 beta 3 adds `xctrace` for Instruments traces and hang triage, and records that lazy `@State` initialization requires a private getter; Xcode 27.2 RC and final (27B52) skill guidance is unchanged from beta 3; Xcode 27.3 beta 1 adds `macos-touch-gestures`, `siri-app-integration`, and `siri-evaluations`, adds a foldable `hinge` command to `device-interaction`, rewrites `modernize-tests` to cover migrating XCUIAutomation UI tests to Swift Testing, and shortens the App Intents skill descriptions.
 
 ## Installation
 
@@ -114,5 +117,5 @@ cp -R plugins/xcode-skills/skills/* .grok/skills/
 
 ## Attribution
 
-- **Skill content:** Apple Inc., exported from Xcode 27.2 (27B52) via `xcrun agent skills export`
+- **Skill content:** Apple Inc., exported from Xcode 27.3 beta 1 (27C5020n) via `xcrun agent skills export`
 - **This repository:** packaging and marketplace manifests only
