@@ -1,6 +1,6 @@
 ---
-name: device-interaction
 description: "Verify app behavior on a device via screenshots, UI hierarchy, and touch interactions."
+name: device-interaction
 ---
 # Device Interaction
 

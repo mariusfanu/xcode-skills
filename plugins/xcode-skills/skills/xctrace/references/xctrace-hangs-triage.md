@@ -23,6 +23,8 @@ The user perceives a hang as the app freezing, becoming unresponsive to taps or 
 True animation and scroll frame drops are a distinct concept, covered by the "Animation Hitches" template in Instruments, not by `triage --style hangs`.
 `triage` has no dedicated style for them.
 
+Pass `--format markdown` to get the report as markdown: headings per hang and section, the profile as a markdown table, and summaries in fenced code blocks.
+
 ## Busy vs. blocked hangs
 
 Before diving into a hang's call tree, establish which of the following categories it falls into.

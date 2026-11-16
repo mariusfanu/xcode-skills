@@ -1,4 +1,4 @@
-# Run: SiriEvaluations tests on a device
+# Run: SiriEvaluations tests on a device or Mac
 
 Run the SiriEvaluations suite, find its evaluation report, and handle the errors that stop a run
 before grading.
@@ -9,7 +9,8 @@ before grading.
   called from an `Evaluation`'s `subject(from:)` and run with `.evaluates(…)`.
 - A Siri evaluation drives the real Siri UI on the destination. Tell the developer before running
   that the device must stay unlocked and untouched for the run, and that they need to enter the
-  device's passcode when it asks to turn on Automation Mode. Each turn can take up to a minute.
+  device's passcode (or the Mac's password) when it asks to turn on Automation Mode. Each turn can
+  take up to a minute.
 - Run SiriEvaluations tests one at a time (`.serialized` suites, never parallel testing).
 - A run that stops before grading is an environment problem. It is not a reason to change
   expectations.
@@ -18,14 +19,21 @@ before grading.
 
 Check each of these on the destination:
 
-1. A physical device (iPhone, iPad, or Apple Vision Pro) running OS 27.3 or later. Simulators are
-   not supported.
+1. A physical device (iPhone, iPad, or Apple Vision Pro), or the Mac itself, running OS 27.3 or later.
+   Simulators are not supported.
 2. Developer Mode is on, and the device is connected and prepared for development in Xcode.
 3. Siri is on, Apple Intelligence is on, and its models have finished downloading (Settings → Siri).
 4. The app under evaluation is built, installed, and has been launched at least once since install,
    so its App Intents are registered and its entities are indexed in Spotlight. Reinstalling the app
    resets this.
 5. For `OnScreen` expectations, the app is in the foreground with the relevant content visible.
+6. The suite is in a UI test target (a UI Testing Bundle), not a unit test bundle. Xcode turns on
+   Automation Mode only while a UI test target runs, and Siri evaluations run only there.
+7. If the scenarios change the app's data and their cleanup can't undo it, the app is back in its
+   starting state before every run, not just the first: delete it from the device (ask the
+   developer, or run `xcrun devicectl device uninstall app --device <device id> <bundle id>`), then
+   build, install and launch it again, and wait for it to finish indexing. The report's Diagnostics
+   show the Spotlight index count, which confirms the entities were indexed.
 
 ## Running
 
@@ -46,6 +54,13 @@ Each `@Test` using `.evaluates(…)` produces an evaluation report:
   scenario: `Input` (the scenario), `Expected`, the metrics (each with `kind`, `value`,
   `rationale`), and `Response`, whose `value` is the tree of what Siri did (Diagnostics, Scenario if
   any, then each turn).
+  - `Input`, `Expected` and `Response.value` are JSON strings, not objects: decode each a second time.
+    `Expected` and `Response.value` decode to the same tree, sections holding rows, down to text.
+  - A scenario failed when one of its metrics has `kind` `fail`.
+  - The file has no Issues column; Xcode computes it. A flagged row is one whose text in `Expected`
+    differs from the same row's text in `Response.value`. Siri's reply is the row in each turn whose
+    key ends in "Siri Response".
+  - This structure is for reading a report, not a stable format: don't build tests or tools on it.
 - The test's own `#expect` on a metric is only the summary. The per-scenario checks are what explain a
   failure, so always read the report, not just the test's pass/fail.
 
@@ -58,3 +73,7 @@ If the test fails before its scenarios are graded, or every scenario fails the s
 environment is the problem, not the app or the test. The test failure message says what stopped the
 run. Check "Before the first run" again, fix what the message points to, and rerun. Don't change the
 scenarios or the app for it.
+
+If the message is "Siri evaluations can only run in a UI test target.", the suite is in a unit test
+bundle, and every metric reads -1. Move the test file to a UI Testing Bundle target whose target
+application is the app (references/writing.md, step 5), and rerun.

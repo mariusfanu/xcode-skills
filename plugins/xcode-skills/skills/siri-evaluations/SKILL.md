@@ -1,6 +1,6 @@
 ---
+description: "Write, run, and analyze SiriEvaluations tests that measure how Siri chooses and fills in an app's App Intents; explain failing scenarios."
 name: siri-evaluations
-description: "Write, run, and analyze SiriEvaluations scenarios, which measure how well Siri selects and fills in an app's App Intents. Use when the developer wants to evaluate how Siri uses their App Intents, App Entities, or App Skills; to add or fix a Siri scenario or expectation; to run a Siri evaluation or fix one that fails before grading; or to explain why a Siri scenario failed and what to change in the app. Takes an optional stage: write, run, or analyze."
 argument-hint: "[write | run | analyze]"
 ---
 SiriEvaluations tests how Siri uses an app's App Intents. A test describes what a user says to Siri,
@@ -27,7 +27,7 @@ explains the report.
 | Stage | The developer wants to… | Read |
 |---|---|---|
 | `write` | create or change Siri scenarios and expectations from the app's App Intents | references/writing.md, then references/api.md as needed |
-| `run` | run the evaluation on a device, find its report, or fix an error that stopped it before grading | references/running.md |
+| `run` | run the evaluation on a device or Mac, find its report, or fix an error that stopped it before grading | references/running.md |
 | `analyze` | understand why scenarios failed and what to change in the app or the test | references/analyzing.md |
 
 Use the stage the developer named (`/siri-evaluations analyze`, "just run them"). "Diagnose" and
@@ -41,7 +41,7 @@ Read only the references for the chosen stage.
 
 Before starting a stage, check that what it needs exists:
 
-- **Tests**, needed by `run`: a test target with a SiriEvaluations suite (search the test sources for
+- **Tests**, needed by `run`: a UI test target with a SiriEvaluations suite (search the test sources for
   `SiriService.run(scenario:`, `SiriScenarioLoader`, and `.evaluates(`).
 - **A report**, needed by `analyze`, in order of preference: one the developer points to, the result
   bundle of a run earlier in this conversation, or the newest `.xcresult` in the project's

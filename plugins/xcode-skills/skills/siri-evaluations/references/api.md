@@ -11,13 +11,16 @@ import Testing
 
 ```swift
 let appDefinitions = IntentDefinitions(bundleIdentifier: "com.example.CometCal")
-let CreateEventIntent = appDefinitions.intents["CreateEventIntent"]   // AppIntentDefinition
-let EventEntity = appDefinitions.entities["EventEntity"]              // AppEntityDefinition
-let OrganizeEventSkill = appDefinitions.skills["organize-event"]      // SkillDefinition
+let createEventIntent = appDefinitions.intents["CreateEventIntent"]   // AppIntentDefinition
+let eventEntity = appDefinitions.entities["EventEntity"]              // AppEntityDefinition
+let organizeEventSkill = appDefinitions.skills["organize-event"]      // SkillDefinition
+let eventSpanEnum = appDefinitions.enums["EventSpan"]                 // AppEnumDefinition
 ```
 
-Intent and entity keys are the Swift type names; skill keys are the `name:` in the skill's
+Intent, entity and enum keys are the Swift type names; skill keys are the `name:` in the skill's
 `SKILL.md` (in the app's `*.skillsbundle`).
+The constants that hold the definitions are values, so name them in lowerCamelCase
+(`createEventIntent`, `eventEntity`), not after the app's types.
 
 ## Scenario structure
 
@@ -46,10 +49,13 @@ block, with the same spelling.
 - `Calls(_ ordering: .ordered | .unordered | .disallowed = .ordered) { … }` takes intent
   expectations: a bare definition (any call of that intent) or `X.expect(…)`.
   - `.ordered`: every intent is called, in the written order (other calls may come in between).
+    Like `.unordered`, it counts a call only on the turn where the call ran. A call Siri asked the user
+    to confirm runs on the turn that answers, not the turn that asked, so its `Calls` goes on the
+    answering turn or in the scenario's `expectation:` block, which counts a call from any turn.
   - `.unordered`: every intent is called, in any order. Each call satisfies only one expectation, so
     two identical expectations need two calls.
   - `.disallowed`: fails if any call matches one of these intents (and its constraints, if any:
-    `DeleteEventIntent.expect(title: .equals("Launch"))` forbids only deleting "Launch"). A call counts
+    `deleteEventIntent.expect(title: .equals("Launch"))` forbids only deleting "Launch"). A call counts
     when it ran, and also when Siri chose it and asked the user to confirm it first. A call that
     stopped for a missing value, or failed, doesn't count.
 - `Finds { … }` takes entity expectations: a bare definition, `E.expect(…)` with property checks, or
@@ -69,21 +75,21 @@ block, with the same spelling.
 ## Intent expectations
 
 ```swift
-CreateEventIntent                                                    // any call of the intent
-CreateEventIntent.expect(title: .equals("Comet Watch"))              // a scalar parameter
-CreateEventIntent.expect(calendar: CalendarEntity)                   // an entity parameter, any calendar
-CreateEventIntent.expect(calendar: CalendarEntity.expectIdentifier("deep-space"))  // a specific entity
-CreateEventIntent.expect(title: .equals("Comet Watch"))
-    .result(EventEntity.expect(title: .equals("Comet Watch")))       // the returned entity
-CreateEventIntent.expect(title: .equals("Comet Watch")).result(.notNil)   // a scalar return value
+createEventIntent                                                    // any call of the intent
+createEventIntent.expect(title: .equals("Comet Watch"))              // a scalar parameter
+createEventIntent.expect(calendar: calendarEntity)                   // an entity parameter, any calendar
+createEventIntent.expect(calendar: calendarEntity.expectIdentifier("deep-space"))  // a specific entity
+createEventIntent.expect(title: .equals("Comet Watch"))
+    .result(eventEntity.expect(title: .equals("Comet Watch")))       // the returned entity
+createEventIntent.expect(title: .equals("Comet Watch")).result(.notNil)   // a scalar return value
 ```
 
 ## Entity expectations
 
 ```swift
-EventEntity.expect(title: .equals("Comet Watch"))
-EventEntity.expect(calendar: CalendarEntity.expect(title: .equals("Deep Space")))   // nested entity
-EventEntity.expectIdentifier("meteor-shower")                                       // by identifier
+eventEntity.expect(title: .equals("Comet Watch"))
+eventEntity.expect(calendar: calendarEntity.expect(title: .equals("Deep Space")))   // nested entity
+eventEntity.expectIdentifier("meteor-shower")                                       // by identifier
 ```
 
 - Unmentioned properties are unconstrained.
@@ -100,6 +106,42 @@ From AppIntentsTesting:
   literal `nil` (`.result(nil)`, `.expect(location: nil)`) leaves the value unchecked, so it can't fail.
 - `.matches(#Predicate { … }, requirement: "…")`: a predicate; `requirement` is how the report
   describes it.
+
+`.equals`, `.contains` and `.contains(regex:)` take a `String` and compare text, so they only fit
+`String` parameters and results.
+
+An `AppEnum` parameter or result takes the enum's definition, or one of its cases:
+
+```swift
+let rsvpEnum = appDefinitions.enums["RSVPAppEnum"]
+rsvpToEventIntent.expect(rsvp: rsvpEnum.makeCase("going"))   // that case
+rsvpToEventIntent.expect(rsvp: rsvpEnum)                     // any case of the enum
+rsvpToEventIntent.expect().result(rsvpEnum.makeCase("going"))
+```
+
+- `makeCase` takes the case's raw value as the app declares it.
+- `.equals("going")` compiles but never matches an enum, so every scenario using it fails even when
+  Siri picked the right case.
+- For one of several cases, compare against the cases in a predicate:
+
+  ```swift
+  let going = rsvpEnum.makeCase("going")
+  let maybe = rsvpEnum.makeCase("maybe")
+  rsvpToEventIntent.expect(rsvp: .matches(#Predicate<AnyAppEnum> { $0 == going || $0 == maybe }, requirement: "is going or maybe"))
+  ```
+
+`Int`, `Double`, `Bool` and `Date` take a predicate of that type:
+
+```swift
+rsvpToEventIntent.expect(guests: .matches(#Predicate<Int> { $0 == 2 }, requirement: "is 2"))
+rsvpToEventIntent.expect(notify: .matches(#Predicate<Bool> { $0 == false }, requirement: "is false"))
+let start = Calendar.current.startOfDay(for: .now)
+rsvpToEventIntent.expect(date: .matches(#Predicate<Date> { $0 >= start }, requirement: "is today or later"))
+```
+
+- `.equals(false)` doesn't compile, and `.equals("2")` compiles but never matches an `Int`.
+- A predicate can't call static members such as `Date.now` inside its body: compute the value before
+  the `#Predicate` and use it there.
 
 ## Matching rules
 

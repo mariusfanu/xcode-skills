@@ -1,7 +1,7 @@
 {
   "name": "xcode-skills",
-  "version": "1.9.0",
-  "description": "Apple-authored agent skills exported from Xcode 27.3 beta 1: SwiftUI, App Intents, document-based apps, app resizability, security auditing, C bounds safety adoption, Swift Testing modernization, device interaction, Instruments tracing with xctrace, macOS touch gestures, and Siri app integration and evaluations",
+  "version": "1.10.0",
+  "description": "Apple-authored agent skills exported from Xcode 27.3 beta 2 covering SwiftUI, App Intents, Foundation Models, document-based apps, app resizability, security auditing, C bounds safety adoption, Swift Testing modernization, device interaction, Instruments tracing with xctrace, macOS touch gestures, and Siri app integration and evaluations",
   "author": {
     "name": "Apple Inc."
   },
@@ -14,6 +14,7 @@
     "swiftui",
     "uikit",
     "app-intents",
+    "foundation-models",
     "ios",
     "macos",
     "security",

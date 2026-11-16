@@ -1,8 +1,8 @@
 # Xcode Skills
 
-An unofficial export of Apple agent skills from **Xcode 27.3 beta 1 (27C5020n)**, repackaged as a cross-platform plugin marketplace for Claude Code, Codex, Grok CLI, and other compatible coding agents.
+An unofficial export of Apple agent skills from **Xcode 27.3 beta 2 (27C5035i)**, repackaged for Claude Code, Codex, Grok CLI, Google Antigravity, and other compatible coding agents.
 
-**These skills were not created by this repository.** They are Apple-authored agent skills bundled with Xcode 27.3 beta 1 (27C5020n), exported with:
+**These skills were not created by this repository.** They are Apple-authored agent skills bundled with Xcode 27.3 beta 2 (27C5035i), exported with:
 
 ```bash
 xcrun agent skills export
@@ -28,8 +28,11 @@ This repo only packages and distributes those exported files for easier installa
 | `macos-touch-gestures` | Add direct touch support (e.g. iPad via Sidecar) to macOS apps with gesture recognizers across AppKit, SwiftUI, and Mac Catalyst |
 | `siri-app-integration` | Make an app work with Siri's model: `@AppIntent(.tool)`, `@AppEntity(.generable)`, Skills bundles, and the Siri Metadata Analyzer |
 | `siri-evaluations` | Write, run, and analyze SiriEvaluations scenarios that grade how Siri uses an app's App Intents |
+| `foundation-models-specialist` | Use Foundation Models in Swift with `LanguageModelSession`, streaming, `@Generable` structured output, tool calling, and on-device, Private Cloud Compute, or custom models |
 
 The plugin package name remains `xcode-skills` across Claude Code, Codex, Grok CLI, and compatible agents. Xcode 27 beta 2 renamed `test-modernizer` to `modernize-tests`; beta 4 renamed `c-bounds-safety` to `adopt-c-bounds-safety`; beta 5 adds App Intents skills and splits document-based SwiftUI guidance into `building-document-based-swiftui-applications`; beta 6 adds tvOS Siri Remote focus commands to `device-interaction`; Xcode 27 adds checked pointer arithmetic (`arm64e.x1`) to `audit-xcode-security-settings`; Xcode 27.1 beta 1 replaces `uikit-app-modernization` with `app-resizability` (resizable windows, iPhone Duo, `userInterfaceIdiom`); Xcode 27.2 beta 3 adds `xctrace` for Instruments traces and hang triage, and records that lazy `@State` initialization requires a private getter; Xcode 27.2 RC and final (27B52) skill guidance is unchanged from beta 3; Xcode 27.3 beta 1 adds `macos-touch-gestures`, `siri-app-integration`, and `siri-evaluations`, adds a foldable `hinge` command to `device-interaction`, rewrites `modernize-tests` to cover migrating XCUIAutomation UI tests to Swift Testing, and shortens the App Intents skill descriptions.
+
+Xcode 27.3 beta 2 adds `foundation-models-specialist`, expands `siri-evaluations` guidance on UI test targets and expectations, documents `parameterSummary` for Siri tools with parameters, and adds Markdown output guidance for `xctrace`. It also shortens several skill descriptions.
 
 ## Installation
 
@@ -101,6 +104,26 @@ grok plugin details xcode-skills
 
 In the TUI, `/marketplace` lists available plugins; `/skills` shows loaded skills.
 
+### Google Antigravity App
+
+To install the skills for all workspaces, clone this repository and copy the skill folders into Antigravity's global skills directory.
+
+```bash
+git clone https://github.com/mariusfanu/xcode-skills.git
+cd xcode-skills
+mkdir -p "$HOME/.gemini/config/skills"
+cp -Rf plugins/xcode-skills/skills/* "$HOME/.gemini/config/skills/"
+```
+
+To install for a single workspace, run these commands from that workspace's root. Replace `/path/to/xcode-skills` with the path to your clone.
+
+```bash
+mkdir -p .agents/skills
+cp -Rf "/path/to/xcode-skills"/plugins/xcode-skills/skills/* .agents/skills/
+```
+
+Start a new conversation in Antigravity and type `/foundation-models-specialist` to invoke the skill. See [Google's Antigravity App skill documentation](https://antigravity.google/docs/skills?app=antigravity#antigravity-app-skill-locations) for details.
+
 ### Manual / Project-Scoped Install
 
 Copy or symlink the `skills/` directory into your project:
@@ -117,5 +140,5 @@ cp -R plugins/xcode-skills/skills/* .grok/skills/
 
 ## Attribution
 
-- **Skill content:** Apple Inc., exported from Xcode 27.3 beta 1 (27C5020n) via `xcrun agent skills export`
+- **Skill content:** Apple Inc., exported from Xcode 27.3 beta 2 (27C5035i) via `xcrun agent skills export`
 - **This repository:** packaging and marketplace manifests only

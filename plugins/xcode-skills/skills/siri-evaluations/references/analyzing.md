@@ -15,8 +15,18 @@ itself.
   or a device that was not ready.
 - Never make a scenario pass by loosening its expectation unless the expectation doesn't match the
   goal of the scenario. Say so explicitly when you do.
-- Siri is nondeterministic. One failure out of several paraphrases is a signal to investigate, not
-  proof. A failure that repeats across reruns and paraphrases may be systematic.
+- Siri is nondeterministic: a scenario can pass on one run and fail on the next with no change to
+  the app or the test. Before changing the app for a failure, rerun the failing scenarios so each has
+  run at least three times, and count how many runs each failed. A scenario that failed once and then
+  passed is noise; one that fails in most runs is systematic.
+- To tell a phrasing problem from an entity or metadata problem, add a paraphrase of the failing
+  utterance as its own scenario. If only one phrasing fails and its paraphrases pass, the phrasing is
+  the problem, and the app usually needs no change.
+- Don't loosen an expectation to hide an intermittent failure. Once a failure is confirmed to be
+  Siri's (it fails in some runs but not others, its paraphrases pass, and the app code is right), give
+  that scenario its own evaluation and wrap that test's `#expect` in
+  `withKnownIssue("<what Siri does>", isIntermittent: true) { … }`. It stays visible in the report and
+  doesn't fail the other tests.
 - After changes to App Intents code, the app must be rebuilt, reinstalled, and launched before
   rerunning (see references/running.md).
 
@@ -47,9 +57,24 @@ A metric's rationale only counts the checks that held. The flagged rows show whi
 1. **Get the report.** Ask for it or export it.
 2. **Rule out the environment.** If every scenario fails the same way, the Diagnostics show fewer
    completed turns than the scenario has, or the Spotlight index is empty, stop and work through references/running.md → "When the run doesn't get to grading"
-   instead.
+   instead. Also rule out state left over from an earlier scenario or run: Siri's reply or the app's
+   result says the change was already made (the request is already accepted, the item is already
+   gone), or the data has expired (the poll has closed). The fix is a fresh install or an
+   order-independent scenario, not a change to the app.
 3. **For each failing scenario**, walk the failing check rows in turn order. The first failure in a
    turn usually explains the rest (an intent that wasn't called leaves its parameter rows unchecked).
+   If a required call's Subject says it needed the user's confirmation, and the next turn confirms,
+   the expectation is on the wrong turn: it belongs on the confirming turn (references/writing.md).
+   That's a test fix, not an app one.
+   If a parameter that isn't a `String` (an enum case, a number, a flag) fails with Siri's value
+   reading as the right one (an enum shows as `Type.case`), the expectation uses a text matcher on it.
+   Rewrite it as an enum case or a typed predicate (references/api.md → "Value matchers"); the app
+   is fine.
+   If Siri called the right intent with the right parameters but the call has no outcome, and Siri's
+   response on that turn is empty, check first whether the intent's `perform()` took too long. Each
+   turn has about a minute, and a `perform()` that waits on the network or a model can run past it.
+   Look at what `perform()` waits on; the fix is in the app (cap the wait and return what it has),
+   not in Siri's choice of intent.
 4. **Read the app code the failure points at**: the intent's `title`, `description`, `@Parameter`
    declarations, `parameterSummary`, `perform()` return type and dialog; the entity's
    `displayRepresentation`, `EntityQuery`, and indexing. Read the scenario too; confirm the
@@ -67,4 +92,5 @@ A metric's rationale only counts the checks that held. The flagged rows show whi
 
    Group scenarios that fail for the same reason and give the fix once.
 6. **Rerun** the failing scenarios after the developer applies fixes, and compare the report with the
-   previous one. If a fix didn't move the metric, say so and revisit the diagnosis.
+   previous one, by how many runs each scenario failed rather than one run's pass or fail. If a fix
+   didn't move the metric, say so and revisit the diagnosis.

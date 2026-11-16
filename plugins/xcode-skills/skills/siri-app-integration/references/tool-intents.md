@@ -58,6 +58,7 @@ Write them for someone who has never seen the app:
 - **Make every action of a tool clear.** A tool can cover several closely related actions with a mode parameter, for example `action: add | remove`, when they work on the same kind of value. Make the mode an `AppEnum`, and describe each case so the model knows what it does. If the actions take different parameters, or the tool needs a skill to explain which combination does what, separate tools are usually clearer.
 - **Similar intents are told apart in their descriptions.** If `Add to Cart` and `Add to Wish List` both exist, each description should make clear which one applies.
 - **Add a parameter description when it says more than the title.** Leave it out when the title says everything, such as "Quantity" for an `Int`.
+- **Give every tool that has parameters a `parameterSummary`.** It's the sentence Shortcuts shows for the action, and a parameter that isn't named in it doesn't appear in the Shortcuts editor. See the app-intents-specialist skill's parameter-summaries reference.
 
 This is the same text that Shortcuts and Spotlight show, so improving it helps everywhere. There's no separate model-only description. Don't invent one.
 
@@ -185,7 +186,7 @@ struct AddToCart { … }
 
 ## Common pitfalls
 
-- **Adding `.tool` without fixing the metadata.** A tool with the title "Run" and no description is effectively invisible to the model, or gets called for the wrong requests. Review the title and descriptions in the same change.
+- **Adding `.tool` without fixing the metadata.** A tool with the title "Run" and no description is effectively invisible to the model, or gets called for the wrong requests. Review the title, descriptions, and parameter summary in the same change.
 - **Overlapping with what Siri already does.** A tool that duplicates a built-in Siri feature or a primary-domain schema, such as setting a timer, sending a message, playing music, or controlling home accessories, competes with the system for those requests. Adopt the schema if one fits (see "Intents that conform to a schema"). Otherwise make the title and description say what's specific to the app. The analyzer reports close matches with system schemas as `SMA701` (see `metadata-analyzer.md`).
 - **A mode parameter the model can't interpret.** If the cases of a mode or action parameter aren't described, or the right combination of mode and other parameters isn't clear from the metadata, the model guesses. Describe every case, or split the tool.
 - **Leaving out the actions people most want.** Purchases, bookings, and other actions with effects should be tools. Keep their confirmation, but don't exclude them.

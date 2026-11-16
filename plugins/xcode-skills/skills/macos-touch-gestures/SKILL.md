@@ -1,6 +1,6 @@
 ---
 name: macos-touch-gestures
-description: "Use when adding or auditing direct touch support in a macOS app (e.g. an iPad through Sidecar) alongside mouse and trackpad. That includes anything that behaves differently with touch than with a mouse, such as taps, hover, long-press menus, drags, scrolling, pinch and text selection, and bug fixes in existing event handlers. Replaces mouse-only handling (mouseDown/mouseDragged/mouseUp overrides, tracking loops, event monitors) with gesture recognizers, and resolves recognizer conflicts, click counting, hit targets, popover dismissal. Primarily covering AppKit, with SwiftUI and Mac Catalyst sections."
+description: "Add or fix touch support in a macOS app (such as iPad via Sidecar) alongside mouse: gesture recognizers instead of mouseDown handlers, hover, long press, drags."
 ---
 # macOS Touch Gestures Skill
 

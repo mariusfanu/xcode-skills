@@ -126,6 +126,27 @@ ID        Category / Name / Start Message / End Message                    Count
 2116:1    └─ UpdateCycle.Stalls                                                1  105.34 ms     105.34 ms     105.34 ms               n/a     105.34 ms
 2116:2       └─ UpdateSequence                                                 1  105.34 ms     105.34 ms     105.34 ms               n/a     105.34 ms
 ```
+
+With `--format markdown`, the same summary is printed as a table:
+
+```
+|depth|ID|Category / Name / Start Message / End Message|Count|Duration|Min Duration|Avg Duration|Std Dev Duration|Max Duration|
+|---|---|---|---|---|---|---|---|---|
+|0|122176:0|* All *|76|209.38 ms|22.25 µs|2.76 ms|15.18 ms|105.34 ms|
+|1|122820:1|Application|1|4.21 ms|4.21 ms|4.21 ms|n/a|4.21 ms|
+|2|122820:2|Deactivation|1|4.21 ms|4.21 ms|4.21 ms|n/a|4.21 ms|
+|3|122820:3|BundleID=com.apple.example, LIWDT=0.|1|4.21 ms|4.21 ms|4.21 ms|n/a|4.21 ms|
+|4|122820:4| enableTelemetry=YES|1|4.21 ms|4.21 ms|4.21 ms|n/a|4.21 ms|
+|1|122176:1|UpdateCycle|74|99.83 ms|22.25 µs|1.35 ms|9.51 ms|81.85 ms|
+|2|122176:2|EventDispatch|37|88.70 ms|22.25 µs|2.40 ms|13.44 ms|81.85 ms|
+|2|56948:2|UpdateSequence|37|11.13 ms|47.29 µs|300.78 µs|852.18 µs|3.89 ms|
+|1|2116:1|UpdateCycle.Stalls|1|105.34 ms|105.34 ms|105.34 ms|n/a|105.34 ms|
+|2|2116:2|UpdateSequence|1|105.34 ms|105.34 ms|105.34 ms|n/a|105.34 ms|
+```
+
+ - "depth" gives the row's level in the hierarchy: 0 for `* All *`, 1 for the first level named in the title header (`Category`), 2 for the second (`Name`), and so on. It is printed even with `--hide-node-ids`.
+ - Rows are in pre-order: a row's parent is the nearest row above it with a smaller depth. To get a row's full path, walk up through its parents, e.g. `UpdateCycle.Stalls › UpdateSequence` for the last row.
+
 **4. Focus Destinations**
 
 Some Details have *Focus Destinations*: these focused Details show the data associated with a row.
