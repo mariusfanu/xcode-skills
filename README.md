@@ -1,144 +1,160 @@
 # Xcode Skills
 
-An unofficial export of Apple agent skills from **Xcode 27.3 beta 2 (27C5035i)**, repackaged for Claude Code, Codex, Grok CLI, Google Antigravity, and other compatible coding agents.
+Give your coding agent Apple’s guidance for building and testing apps with Xcode. This unofficial package contains **15 Apple-authored skills** covering SwiftUI, App Intents, Foundation Models, testing, and more.
 
-**These skills were not created by this repository.** They are Apple-authored agent skills bundled with Xcode 27.3 beta 2 (27C5035i), exported with:
-
-```bash
-xcrun agent skills export
-```
-
-This repo only packages and distributes those exported files for easier installation outside Xcode.
-
-## Skills Included
-
-| Skill | Description |
-|-------|-------------|
-| `swiftui-specialist` | SwiftUI best practices, data flow, modifiers, localization, and performance patterns |
-| `swiftui-whats-new-27` | New SwiftUI APIs and SDK 27 migrations (`@State` macro, reorderable, swipe actions, toolbars, and more) |
-| `building-document-based-swiftui-applications` | Build and migrate document-based SwiftUI apps with the `Document` protocol (`DocumentGroup`, readers/writers, UTTypes) |
-| `app-intents-specialist` | App Intents best practices: entities, queries, parameters, donations, shortcuts phrases, and localization |
-| `app-intents-whats-new-27` | New App Intents APIs for iOS 26/27 (execution modes, snippets, Visual Intelligence, Spotlight, testing) |
-| `app-resizability` | Make UIKit apps adapt to resizable windows, split-screen, Stage Manager, and the foldable iPhone Duo |
-| `audit-xcode-security-settings` | Audit and enable security-oriented Xcode build settings, Enhanced Security, and checked pointer arithmetic |
-| `adopt-c-bounds-safety` | Guide for adopting the C `-fbounds-safety` language extension |
-| `modernize-tests` | Migrate XCTest and XCUIAutomation suites to Swift Testing and adopt modern testing patterns |
-| `device-interaction` | Verify app behavior on device or simulator via screenshots, UI hierarchy, touch, tvOS Siri Remote focus, and foldable hinge angle |
-| `xctrace` | Capture and read Instruments traces (`.trace`, `.atrc`) and triage app hangs with `xctrace triage` |
-| `macos-touch-gestures` | Add direct touch support (e.g. iPad via Sidecar) to macOS apps with gesture recognizers across AppKit, SwiftUI, and Mac Catalyst |
-| `siri-app-integration` | Make an app work with Siri's model: `@AppIntent(.tool)`, `@AppEntity(.generable)`, Skills bundles, and the Siri Metadata Analyzer |
-| `siri-evaluations` | Write, run, and analyze SiriEvaluations scenarios that grade how Siri uses an app's App Intents |
-| `foundation-models-specialist` | Use Foundation Models in Swift with `LanguageModelSession`, streaming, `@Generable` structured output, tool calling, and on-device, Private Cloud Compute, or custom models |
-
-The plugin package name remains `xcode-skills` across Claude Code, Codex, Grok CLI, and compatible agents. Xcode 27 beta 2 renamed `test-modernizer` to `modernize-tests`; beta 4 renamed `c-bounds-safety` to `adopt-c-bounds-safety`; beta 5 adds App Intents skills and splits document-based SwiftUI guidance into `building-document-based-swiftui-applications`; beta 6 adds tvOS Siri Remote focus commands to `device-interaction`; Xcode 27 adds checked pointer arithmetic (`arm64e.x1`) to `audit-xcode-security-settings`; Xcode 27.1 beta 1 replaces `uikit-app-modernization` with `app-resizability` (resizable windows, iPhone Duo, `userInterfaceIdiom`); Xcode 27.2 beta 3 adds `xctrace` for Instruments traces and hang triage, and records that lazy `@State` initialization requires a private getter; Xcode 27.2 RC and final (27B52) skill guidance is unchanged from beta 3; Xcode 27.3 beta 1 adds `macos-touch-gestures`, `siri-app-integration`, and `siri-evaluations`, adds a foldable `hinge` command to `device-interaction`, rewrites `modernize-tests` to cover migrating XCUIAutomation UI tests to Swift Testing, and shortens the App Intents skill descriptions.
-
-Xcode 27.3 beta 2 adds `foundation-models-specialist`, expands `siri-evaluations` guidance on UI test targets and expectations, documents `parameterSummary` for Siri tools with parameters, and adds Markdown output guidance for `xctrace`. It also shortens several skill descriptions.
+**Plugin version `1.10.0`** · Exported from **Xcode 27.3 beta 2 (`27C5035i`)**
 
 ## Installation
 
+Choose your coding agent. Each method installs the same skills.
+
+[Ask your agent to install](#ask-your-agent-to-install) · [Claude Code](#claude-code) · [Codex](#codex) · [GitHub Copilot](#github-copilot) · [Grok CLI](#grok-cli) · [Google Antigravity](#google-antigravity-app) · [Manual install](#manual-install)
+
+### Ask your agent to install
+
+Copy this prompt into your coding agent.
+
+```text
+Install or update Xcode Skills using the section for my coding agent at
+https://github.com/mariusfanu/xcode-skills#installation. If my agent or install
+scope is unclear, ask me before making changes.
+
+After installing, check that the agent can discover the skills listed in the README.
+Tell me what you verified. If you can't access the intended machine or a step must
+be done in the app, give me the exact step that remains.
+```
+
 ### Claude Code
 
-Register the marketplace and install:
+Run these commands inside Claude Code.
 
-```bash
+```text
 /plugin marketplace add mariusfanu/xcode-skills
 /plugin install xcode-skills@xcode-skills
 ```
 
-Or install from a local clone:
+From a terminal, use `claude plugin marketplace add mariusfanu/xcode-skills` and `claude plugin install xcode-skills@xcode-skills`. For a local clone, pass its path to `marketplace add` instead of the GitHub repository name.
 
-```bash
-git clone https://github.com/mariusfanu/xcode-skills.git
-/plugin marketplace add ./xcode-skills
-/plugin install xcode-skills@xcode-skills
-```
+To update an existing installation, run `/plugin marketplace update xcode-skills`, then `/plugin update xcode-skills@xcode-skills` inside Claude Code.
 
-To pick up new skill versions later:
+### Codex
 
-```bash
-/plugin marketplace update xcode-skills
-/plugin update xcode-skills@xcode-skills
-```
-
-The same commands also work from the terminal via `claude plugin ...` (e.g. `claude plugin marketplace add mariusfanu/xcode-skills`).
-
-### Codex CLI / Codex App
-
-**CLI** — add the GitHub marketplace and install:
+Run these commands in a terminal. To use the desktop app, register the marketplace with the first command, then open **Plugins** and install `xcode-skills` from the `xcode-skills` marketplace.
 
 ```bash
 codex plugin marketplace add mariusfanu/xcode-skills
 codex plugin add xcode-skills@xcode-skills
 ```
 
-**App** — open Plugins in the sidebar, add `mariusfanu/xcode-skills` as a marketplace source, then install `xcode-skills`.
+To update an existing installation, run `codex plugin marketplace upgrade xcode-skills` followed by `codex plugin add xcode-skills@xcode-skills`. Check the installed version with `codex plugin list --marketplace xcode-skills`.
 
-For direct CLI install from a specific branch or tag:
+To install from a specific branch or tag, add `--ref <branch-or-tag>` to the marketplace command.
+
+### GitHub Copilot
+
+Install the plugin with GitHub Copilot CLI. [Copilot CLI documentation](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/plugins-finding-installing)
 
 ```bash
-codex plugin marketplace add mariusfanu/xcode-skills --ref main
-codex plugin add xcode-skills@xcode-skills
+copilot plugin marketplace add mariusfanu/xcode-skills
+copilot plugin install xcode-skills@xcode-skills
+copilot skill list
 ```
+
+The Copilot desktop app also picks up skills configured for Copilot CLI. Open **Customize → Skills** to see them. [Copilot desktop documentation](https://docs.github.com/en/copilot/how-tos/github-copilot-app/customize-github-copilot-app#adding-agent-skills)
+
+For VS Code or a project you want to share with teammates, use the [manual install](#manual-install). Open a new Copilot chat and type `/foundation-models-specialist` to invoke the skill. In an open Copilot CLI session, run `/skills reload` after copying the files. [VS Code documentation](https://code.visualstudio.com/docs/agent-customization/agent-skills)
 
 ### Grok CLI
 
-Add this repo as a marketplace source, then install the plugin:
+Add the marketplace and install the plugin.
 
 ```bash
 grok plugin marketplace add mariusfanu/xcode-skills
-grok plugin install mariusfanu/xcode-skills --trust
+grok plugin install xcode-skills --trust
 ```
 
-Or install directly without adding the marketplace first:
-
-```bash
-grok plugin install mariusfanu/xcode-skills --trust
-```
-
-Verify:
-
-```bash
-grok plugin list
-grok plugin details xcode-skills
-```
-
-In the TUI, `/marketplace` lists available plugins; `/skills` shows loaded skills.
+For a direct install, run `grok plugin install 'mariusfanu/xcode-skills#plugins/xcode-skills' --trust`. Use `grok plugin details xcode-skills` to check the install or `/skills` inside Grok to see the available skills.
 
 ### Google Antigravity App
 
-To install the skills for all workspaces, clone this repository and copy the skill folders into Antigravity's global skills directory.
+Use the [manual install](#manual-install) to add the skills to one workspace or make them available across all workspaces. Start a new conversation and type `/foundation-models-specialist` to invoke the skill. [Antigravity documentation](https://antigravity.google/docs/skills?app=antigravity#antigravity-app-skill-locations)
+
+### Manual install
+
+Clone this repository and keep the following commands in the same terminal so `skills_source` points to the clone.
 
 ```bash
 git clone https://github.com/mariusfanu/xcode-skills.git
-cd xcode-skills
-mkdir -p "$HOME/.gemini/config/skills"
-cp -Rf plugins/xcode-skills/skills/* "$HOME/.gemini/config/skills/"
+skills_source="$PWD/xcode-skills/plugins/xcode-skills/skills"
 ```
 
-To install for a single workspace, run these commands from that workspace's root. Replace `/path/to/xcode-skills` with the path to your clone.
+If you already have a clone, set `skills_source` to the full path to its `plugins/xcode-skills/skills` folder.
+
+Choose a destination. For a project install, switch to that project's root before copying the skills.
+
+| Coding agent | Scope | Destination |
+| --- | --- | --- |
+| GitHub Copilot | All local projects | `$HOME/.copilot/skills` |
+| GitHub Copilot | One project | `.github/skills` |
+| Google Antigravity App | All workspaces | `$HOME/.gemini/config/skills` |
+| Google Antigravity App | One workspace | `.agents/skills` |
+| Claude Code | One project | `.claude/skills` |
+| Grok CLI | One project | `.grok/skills` |
+
+Set `skills_destination` to your chosen path. This example installs for all local Copilot projects.
 
 ```bash
-mkdir -p .agents/skills
-cp -Rf "/path/to/xcode-skills"/plugins/xcode-skills/skills/* .agents/skills/
+skills_destination="$HOME/.copilot/skills"
+mkdir -p "$skills_destination"
+cp -Rf "$skills_source"/* "$skills_destination/"
 ```
 
-Start a new conversation in Antigravity and type `/foundation-models-specialist` to invoke the skill. See [Google's Antigravity App skill documentation](https://antigravity.google/docs/skills?app=antigravity#antigravity-app-skill-locations) for details.
+To update a manual install, pull the latest changes in your clone and run the copy step again. It replaces existing files with the same names.
 
-### Manual / Project-Scoped Install
+## Use the skills
 
-Copy or symlink the `skills/` directory into your project:
+Start a new chat in your coding agent and ask it to use the skill that matches your task. For example, “Use `swiftui-specialist` to review this view for unnecessary updates.”
 
-```bash
-# Claude Code
-mkdir -p .claude/skills
-cp -R plugins/xcode-skills/skills/* .claude/skills/
+### Skills included
 
-# Grok CLI
-mkdir -p .grok/skills
-cp -R plugins/xcode-skills/skills/* .grok/skills/
-```
+| Skill | What it helps with |
+| --- | --- |
+| [`swiftui-specialist`](plugins/xcode-skills/skills/swiftui-specialist/SKILL.md) | SwiftUI best practices, data flow, modifiers, localization, and performance |
+| [`swiftui-whats-new-27`](plugins/xcode-skills/skills/swiftui-whats-new-27/SKILL.md) | SwiftUI APIs and SDK 27 migrations, including `@State`, reordering, swipe actions, and toolbars |
+| [`building-document-based-swiftui-applications`](plugins/xcode-skills/skills/building-document-based-swiftui-applications/SKILL.md) | Build or migrate document apps with `Document`, `DocumentGroup`, readers, writers, and UTTypes |
+| [`app-intents-specialist`](plugins/xcode-skills/skills/app-intents-specialist/SKILL.md) | App Intents best practices for entities, queries, parameters, Shortcuts, and localization |
+| [`app-intents-whats-new-27`](plugins/xcode-skills/skills/app-intents-whats-new-27/SKILL.md) | App Intents APIs for iOS 26 and 27, including execution modes, snippets, Visual Intelligence, and Spotlight |
+| [`siri-app-integration`](plugins/xcode-skills/skills/siri-app-integration/SKILL.md) | Expose tools and generable entities to Siri, write App Skills, and use the Siri Metadata Analyzer |
+| [`siri-evaluations`](plugins/xcode-skills/skills/siri-evaluations/SKILL.md) | Write, run, and analyze tests that check how Siri uses an app’s App Intents |
+| [`foundation-models-specialist`](plugins/xcode-skills/skills/foundation-models-specialist/SKILL.md) | Use Foundation Models with `LanguageModelSession`, `@Generable`, streaming, and tool calling |
+| [`app-resizability`](plugins/xcode-skills/skills/app-resizability/SKILL.md) | Adapt UIKit apps to resizable windows, split screen, Stage Manager, and iPhone Duo |
+| [`macos-touch-gestures`](plugins/xcode-skills/skills/macos-touch-gestures/SKILL.md) | Add direct touch support to macOS apps, including through Sidecar |
+| [`audit-xcode-security-settings`](plugins/xcode-skills/skills/audit-xcode-security-settings/SKILL.md) | Audit compiler and analyzer settings, Enhanced Security, and checked pointer arithmetic |
+| [`adopt-c-bounds-safety`](plugins/xcode-skills/skills/adopt-c-bounds-safety/SKILL.md) | Adopt the C `-fbounds-safety` language extension |
+| [`modernize-tests`](plugins/xcode-skills/skills/modernize-tests/SKILL.md) | Migrate XCTest and XCUIAutomation suites to Swift Testing |
+| [`device-interaction`](plugins/xcode-skills/skills/device-interaction/SKILL.md) | Inspect and interact with devices and simulators, including tvOS focus and foldable hinge angle |
+| [`xctrace`](plugins/xcode-skills/skills/xctrace/SKILL.md) | Capture Instruments traces, read `.trace` and `.atrc` files, and triage hangs |
+
+## What’s new in Xcode 27.3 beta 2
+
+- Adds `foundation-models-specialist`.
+- Expands Siri evaluation guidance on UI test targets and expectations and documents `parameterSummary` for Siri tools with parameters.
+- Adds Markdown output guidance for `xctrace` and shortens several skill descriptions.
+
+<details>
+<summary>Earlier Xcode releases</summary>
+
+- **27.3 beta 1** adds `macos-touch-gestures`, `siri-app-integration`, and `siri-evaluations`. It adds the `hinge` command to `device-interaction`, expands `modernize-tests` to cover XCUIAutomation migrations, and shortens the App Intents skill descriptions.
+- **27.2 beta 3** adds `xctrace` for Instruments and hang triage and records that lazy `@State` initialization requires a private getter. The RC and final release (`27B52`) keep the same guidance.
+- **27.1 beta 1** replaces `uikit-app-modernization` with `app-resizability` and covers resizable windows, iPhone Duo, and `userInterfaceIdiom`.
+- **27 final** adds checked pointer arithmetic (`arm64e.x1`) to `audit-xcode-security-settings`.
+- **27 beta 6** adds tvOS Siri Remote focus commands to `device-interaction`.
+- **27 beta 5** adds App Intents skills and separates the guidance for document apps into `building-document-based-swiftui-applications`.
+- **27 beta 4** renames `c-bounds-safety` to `adopt-c-bounds-safety`.
+- **27 beta 2** renames `test-modernizer` to `modernize-tests`.
+
+</details>
 
 ## Attribution
 
-- **Skill content:** Apple Inc., exported from Xcode 27.3 beta 2 (27C5035i) via `xcrun agent skills export`
-- **This repository:** packaging and marketplace manifests only
+Apple Inc. authored the skills and bundles them with Xcode. This repository packages the files produced by `xcrun agent skills export` and provides the marketplace manifests.
